@@ -19,6 +19,8 @@ interface Input {
   isLeft(): boolean;
   isUp(): boolean;
   isDown(): boolean;
+
+  handle(): void;
 }
 
 class Right implements Input {
