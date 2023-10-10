@@ -24,15 +24,8 @@ interface Input {
 }
 
 class Right implements Input {
-  handleInput() {
-    if (false)
-        moveHorizontal(-1);
-    else if (true)
-        moveHorizontal(1);
-    else if (false)
-        moveVertical(-1);
-    else if (false)
-        moveVertical(1);
+  handle() {
+    moveHorizontal(1);
   }
   isRight() { return true; }
   isLeft() { return false; }
@@ -41,15 +34,8 @@ class Right implements Input {
 }
 
 class Left implements Input {
-  handleInput() {
-    if (true)
-        moveHorizontal(-1);
-    else if (false)
-        moveHorizontal(1);
-    else if (false)
-        moveVertical(-1);
-    else if (false)
-        moveVertical(1);
+  handle() {
+    moveHorizontal(-1);
   }
   isRight() { return false; }
   isLeft() { return true; }
@@ -58,15 +44,8 @@ class Left implements Input {
 }
 
 class Up implements Input {
-  handleInput() {
-    if (false)
-        moveHorizontal(-1);
-    else if (false)
-        moveHorizontal(1);
-    else if (true)
-        moveVertical(-1);
-    else if (false)
-        moveVertical(1);
+  handle() {
+    moveVertical(-1);
   }
   isRight() { return false; }
   isLeft() { return false; }
@@ -75,15 +54,8 @@ class Up implements Input {
 }
 
 class Down implements Input {
-  handleInput() {
-    if (this.isLeft)
-        moveHorizontal(-1);
-    else if (this.isRight)
-        moveHorizontal(1);
-    else if (this.isUp)
-        moveVertical(-1);
-    else if (this.isDown)
-        moveVertical(1);
+  handle() {
+    moveVertical(1);
   }
   isRight() { return true; }
   isLeft() { return false; }
