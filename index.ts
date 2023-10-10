@@ -20,6 +20,9 @@ enum Input {
 
 interface Input2 {
   isRight(): boolean;
+  isLeft(): boolean;
+  isUp(): boolean;
+  isDown(): boolean;
 }
 
 let playerx = 1;
