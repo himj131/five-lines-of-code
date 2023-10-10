@@ -127,14 +127,14 @@ function handleInputs() {
   }
 }
 
-function handleInput(input: Input) {
-  if (input === Input.LEFT)
+function handleInput(input: Input2) {
+  if (input.isLeft)
       moveHorizontal(-1);
-  else if (input === Input.RIGHT)
+  else if (input.isRight)
       moveHorizontal(1);
-  else if (input === Input.UP)
+  else if (input.isUp)
       moveVertical(-1);
-  else if (input === Input.DOWN)
+  else if (input.isDown)
       moveVertical(1);
 }
 
