@@ -132,22 +132,10 @@ function update() {
 
 function handleInputs() {
   while (inputs.length > 0) {
-      var current = inputs.pop();
-      handleInput(current);
+      var input = inputs.pop();
+      input.handle();
   }
 }
-
-function handleInput2(input: Input) {
-  if (input.isLeft)
-      moveHorizontal(-1);
-  else if (input.isRight)
-      moveHorizontal(1);
-  else if (input.isUp)
-      moveVertical(-1);
-  else if (input.isDown)
-      moveVertical(1);
-}
-
 
 function updateMap() {
   for (var y = map.length - 1; y >= 0; y--) {
