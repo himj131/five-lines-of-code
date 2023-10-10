@@ -137,7 +137,7 @@ function handleInputs() {
   }
 }
 
-function handleInput(input: Input) {
+function handleInput2(input: Input) {
   if (input.isLeft)
       moveHorizontal(-1);
   else if (input.isRight)
