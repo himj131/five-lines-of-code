@@ -25,13 +25,13 @@ interface Input {
 
 class Right implements Input {
   handleInput() {
-    if (this.isLeft)
+    if (false)
         moveHorizontal(-1);
-    else if (this.isRight)
+    else if (true)
         moveHorizontal(1);
-    else if (this.isUp)
+    else if (false)
         moveVertical(-1);
-    else if (this.isDown)
+    else if (false)
         moveVertical(1);
   }
   isRight() { return true; }
@@ -42,13 +42,13 @@ class Right implements Input {
 
 class Left implements Input {
   handleInput() {
-    if (this.isLeft)
+    if (true)
         moveHorizontal(-1);
-    else if (this.isRight)
+    else if (false)
         moveHorizontal(1);
-    else if (this.isUp)
+    else if (false)
         moveVertical(-1);
-    else if (this.isDown)
+    else if (false)
         moveVertical(1);
   }
   isRight() { return false; }
@@ -59,13 +59,13 @@ class Left implements Input {
 
 class Up implements Input {
   handleInput() {
-    if (this.isLeft)
+    if (false)
         moveHorizontal(-1);
-    else if (this.isRight)
+    else if (false)
         moveHorizontal(1);
-    else if (this.isUp)
+    else if (true)
         moveVertical(-1);
-    else if (this.isDown)
+    else if (false)
         moveVertical(1);
   }
   isRight() { return false; }
