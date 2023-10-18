@@ -80,8 +80,19 @@ function assertExhausted(x: never): never {
   throw new Error("Error");
 }
 
-enum FallingState {
-  FALLING, RESTING
+interface FallingState {
+  isFalling(): boolean;
+  isResting(): boolean;
+}
+
+class Falling implements FallingState {
+  isFalling() { return true; }
+  isResting() { return false; }
+}
+
+class Resting implements FallingState {
+  isFalling() { return false; }
+  isResting() { return true; }
 }
 
 function transformTile(tile: RawTile) {
@@ -89,8 +100,8 @@ function transformTile(tile: RawTile) {
     case RawTile.AIR: return new Air();
     case RawTile.PLAYER: return new Player();
     case RawTile.UNBREAKABLE: return new Unbreakable();
-    case RawTile.STONE: return new Stone(FallingState.RESTING);
-    case RawTile.FALLING_STONE: return new Stone(FallingState.RESTING);
+    case RawTile.STONE: return new Stone(new Fallin()));
+    case RawTile.FALLING_STONE: return new Stone(new Resting());
     case RawTile.BOX: return new Box();
     case RawTile.FALLING_BOX: return new FallingBox();
     case RawTile.FLUX: return new Flux();
@@ -170,7 +181,7 @@ function updateTile() {
       for (var x = 0; x < map[y].length; x++) {
           if (map[y][x].isStony()
               && map[y + 1][x].isAir()) {
-              map[y + 1][x] = new Stone(FallingState.FALLING);
+              map[y + 1][x] = new Stone(new Falling());
               map[y][x] = new Air();
           }
           else if (map[y][x].isBoxy()
@@ -179,7 +190,7 @@ function updateTile() {
               map[y][x] = new Air();
           }
           else if (map[y][x].isFallingStone()) {
-              map[y][x] = new Stone(FallingState.FALLING);
+              map[y][x] = new Stone(new Falling());
           }
           else if (map[y][x].isFallingBox()) {
               map[y][x] = new Box();
@@ -326,7 +337,7 @@ class Stone implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return this.falling === FallingState.FALLING}
+  isFallingStone(){return this.falling.isFalling();}
   isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
