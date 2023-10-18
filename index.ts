@@ -86,7 +86,7 @@ function transformTile(tile: RawTile) {
     case RawTile.PLAYER: return new Player();
     case RawTile.UNBREAKABLE: return new Unbreakable();
     case RawTile.STONE: return new Stone(false);
-    case RawTile.FALLING_STONE: return new FallingStone(true);
+    case RawTile.FALLING_STONE: return new Stone(false);
     case RawTile.BOX: return new Box();
     case RawTile.FALLING_BOX: return new FallingBox();
     case RawTile.FLUX: return new Flux();
@@ -166,7 +166,7 @@ function updateTile() {
       for (var x = 0; x < map[y].length; x++) {
           if (map[y][x].isStony()
               && map[y + 1][x].isAir()) {
-              map[y + 1][x] = new FallingStone(true);
+              map[y + 1][x] = new Stone(false);
               map[y][x] = new Air();
           }
           else if (map[y][x].isBoxy()
@@ -331,44 +331,6 @@ class Stone implements Tile {
   isLock1(){return false;}
   isLock2(){return false;}
 
-}
-
-class FallingStone implements Tile {
-  private falling: boolean;
-  constructor(falling: boolean) {
-    this.falling = falling;
-  }
-  moveHorizontal(dx: number) {
-    if(this.isFallingStone() === false) {
-      if (map[playery][playerx + dx + dx].isAir()
-        && map[playery + 1][playerx + dx].isAir) {
-        map[playery][playerx + dx + dx] = this;
-        moveToTile(playerx + dx, playery);
-      }
-    } else if (this.isFallingStone() === true) {
-      
-    }
-  }
-  isFallingStone(){return true;}
-  isStony(): boolean { return true; }
-  isBoxy(): boolean { return false; }
-  draw(g: CanvasRenderingContext2D, x: number, y: number): void {
-    g.fillStyle = "#0000cc";
-    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-  }
-  color(g: CanvasRenderingContext2D): void {
-    g.fillStyle = "#0000cc";
-  }
-  isFlux(){return false;}
-  isUnbreakable(){return false;}
-  
-  isAir(){return false;}
-  isPlayer(){return false;}
-  isFallingBox(){return this.falling;}
-  isKey1(){return false;}
-  isKey2(){return false;}
-  isLock1(){return false;}
-  isLock2(){return false;}
 }
 
 class Player implements Tile {
