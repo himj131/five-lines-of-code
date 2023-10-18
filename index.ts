@@ -324,7 +324,7 @@ class Stone implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
+  isFallingStone(){return this.falling;}
   isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
@@ -364,7 +364,7 @@ class FallingStone implements Tile {
   
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingBox(){return false;}
+  isFallingBox(){return this.falling;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
