@@ -297,8 +297,8 @@ class Unbreakable implements Tile {
 
 class Stone implements Tile {
   private falling: boolean;
-  constructor() {
-    this.falling = false;
+  constructor(falling: boolean) {
+    this.falling = falling;
   }
   moveHorizontal(dx: number) {
     if(this.isFallingStone() === false) {
@@ -335,8 +335,8 @@ class Stone implements Tile {
 
 class FallingStone implements Tile {
   private falling: boolean;
-  constructor() {
-    this.falling = true;
+  constructor(falling: boolean) {
+    this.falling = falling;
   }
   moveHorizontal(dx: number) {
     if(this.isFallingStone() === false) {
