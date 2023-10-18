@@ -295,29 +295,11 @@ class Unbreakable implements Tile {
   isLock2(){return false;}
 }
 
-class Player implements Tile {
-  moveHorizontal(dx: number) {}
-  isStony(): boolean { return false; }
-  isBoxy(): boolean { return false; }
-  draw(g: CanvasRenderingContext2D): void {
-    
-  }
-  color(g: CanvasRenderingContext2D): void {
-  
-  }
-  isFlux(){return false;}
-  isUnbreakable(){return false;}
-  isAir(){return false;}
-  isPlayer(){return true;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
-  isKey1(){return false;}
-  isKey2(){return false;}
-  isLock1(){return false;}
-  isLock2(){return false;}
-}
-
 class Stone implements Tile {
+  private falling: boolean;
+  constructor() {
+    this.falling = false;
+  }
   moveHorizontal(dx: number) {
     if(this.isFallingStone() === false) {
       if (map[playery][playerx + dx + dx].isAir()
@@ -325,9 +307,7 @@ class Stone implements Tile {
         map[playery][playerx + dx + dx] = this;
         moveToTile(playerx + dx, playery);
       }
-    }
-  
-    if(this.isFallingStone() === true) {
+    } else if (this.isFallingStone() === true) {
 
     }
   }
@@ -354,19 +334,21 @@ class Stone implements Tile {
 }
 
 class FallingStone implements Tile {
-  moveHorizontal(dx: number) {
-    if (true) {}
+  private falling: boolean;
+  constructor() {
+    this.falling = true;
   }
-
-
-  // if(this.isFallingStone() === true) {}
-  //   if(this.isFallingStone() === false) {
-  //     if (map[playery][playerx + dx + dx].isAir()
-  //       && map[playery + 1][playerx + dx].isAir) {
-  //       map[playery][playerx + dx + dx] = this;
-  //       moveToTile(playerx + dx, playery);
-  //     }
-  //   }
+  moveHorizontal(dx: number) {
+    if(this.isFallingStone() === false) {
+      if (map[playery][playerx + dx + dx].isAir()
+        && map[playery + 1][playerx + dx].isAir) {
+        map[playery][playerx + dx + dx] = this;
+        moveToTile(playerx + dx, playery);
+      }
+    } else if (this.isFallingStone() === true) {
+      
+    }
+  }
   isFallingStone(){return true;}
   isStony(): boolean { return true; }
   isBoxy(): boolean { return false; }
@@ -382,6 +364,28 @@ class FallingStone implements Tile {
   
   isAir(){return false;}
   isPlayer(){return false;}
+  isFallingBox(){return false;}
+  isKey1(){return false;}
+  isKey2(){return false;}
+  isLock1(){return false;}
+  isLock2(){return false;}
+}
+
+class Player implements Tile {
+  moveHorizontal(dx: number) {}
+  isStony(): boolean { return false; }
+  isBoxy(): boolean { return false; }
+  draw(g: CanvasRenderingContext2D): void {
+    
+  }
+  color(g: CanvasRenderingContext2D): void {
+  
+  }
+  isFlux(){return false;}
+  isUnbreakable(){return false;}
+  isAir(){return false;}
+  isPlayer(){return true;}
+  isFallingStone(){return false;}
   isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
