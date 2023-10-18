@@ -80,13 +80,17 @@ function assertExhausted(x: never): never {
   throw new Error("Error");
 }
 
+enum FallingState {
+  FALLING, RESTING
+}
+
 function transformTile(tile: RawTile) {
   switch(tile) {
     case RawTile.AIR: return new Air();
     case RawTile.PLAYER: return new Player();
     case RawTile.UNBREAKABLE: return new Unbreakable();
-    case RawTile.STONE: return new Stone(false);
-    case RawTile.FALLING_STONE: return new Stone(false);
+    case RawTile.STONE: return new Stone(FallingState.RESTING);
+    case RawTile.FALLING_STONE: return new Stone(FallingState.RESTING);
     case RawTile.BOX: return new Box();
     case RawTile.FALLING_BOX: return new FallingBox();
     case RawTile.FLUX: return new Flux();
@@ -166,7 +170,7 @@ function updateTile() {
       for (var x = 0; x < map[y].length; x++) {
           if (map[y][x].isStony()
               && map[y + 1][x].isAir()) {
-              map[y + 1][x] = new Stone(false);
+              map[y + 1][x] = new Stone(FallingState.FALLING);
               map[y][x] = new Air();
           }
           else if (map[y][x].isBoxy()
@@ -175,7 +179,7 @@ function updateTile() {
               map[y][x] = new Air();
           }
           else if (map[y][x].isFallingStone()) {
-              map[y][x] = new Stone(false);
+              map[y][x] = new Stone(FallingState.FALLING);
           }
           else if (map[y][x].isFallingBox()) {
               map[y][x] = new Box();
@@ -296,9 +300,7 @@ class Unbreakable implements Tile {
 }
 
 class Stone implements Tile {
-  private falling: boolean;
-  constructor(falling: boolean) {
-    this.falling = falling;
+  constructor(private falling: FallingState) {
   }
   moveHorizontal(dx: number) {
     if(this.isFallingStone() === false) {
@@ -324,7 +326,7 @@ class Stone implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return this.falling;}
+  isFallingStone(){return this.falling === FallingState.FALLING}
   isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
