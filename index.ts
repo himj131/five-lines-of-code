@@ -181,19 +181,18 @@ function updateTile() {
       for (var x = 0; x < map[y].length; x++) {
           if (map[y][x].isStony()
               && map[y + 1][x].isAir()) {
-              map[y + 1][x] = new Stone(new Falling());
-              map[y][x] = new Air();
+                map[y][x].drop();
+                map[y + 1][x] = map[y][x];
+                map[y][x] = new Air();
           }
           else if (map[y][x].isBoxy()
               && map[y + 1][x].isAir()) {
-              map[y + 1][x] = new Box(new Falling());
-              map[y][x] = new Air();
+                map[y][x].drop();
+                map[y + 1][x] = map[y][x];
+                map[y][x] = new Air();
           }
-          else if (map[y][x].isFallingStone()) {
-              map[y][x] = new Stone(new Resting());
-          }
-          else if (map[y][x].isFallingBox()) {
-              map[y][x] = new Box(new Resting());
+          else if (map[y][x].isFalling()) {
+              map[y][x].rest();
           }
       }
   }
@@ -208,6 +207,7 @@ function drawMap(g: CanvasRenderingContext2D) {
 }
 
 interface Tile{
+  isFalling(): boolean;
   drop(): void;
   rest(): void;
   
@@ -215,8 +215,6 @@ interface Tile{
   isUnbreakable(): boolean;
   isAir(): boolean;
   isPlayer(): boolean;
-  isFallingStone(): boolean;
-  isFallingBox(): boolean;
   isKey1(): boolean;
   isKey2(): boolean;
   isLock1(): boolean;
@@ -229,6 +227,9 @@ interface Tile{
 }
 
 class Air implements Tile {
+  isFalling(): boolean {
+    return false;
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) {   
@@ -257,8 +258,6 @@ class Air implements Tile {
   isUnbreakable(){return false;}
   isAir(){return true;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
@@ -266,6 +265,9 @@ class Air implements Tile {
 }
 
 class Flux implements Tile {
+  isFalling(): boolean {
+    return false;
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) { 
@@ -286,8 +288,6 @@ class Flux implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
@@ -295,6 +295,9 @@ class Flux implements Tile {
 }
 
 class Unbreakable implements Tile {
+  isFalling(): boolean {
+    return false
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) {}
@@ -311,8 +314,6 @@ class Unbreakable implements Tile {
   isUnbreakable(){return true;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
@@ -325,15 +326,16 @@ class Stone implements Tile {
 
   constructor(private falling: FallingState) {
   }
+  isFalling(): boolean {
+    return this.falling.isFalling();
+  }
   moveHorizontal(dx: number) {
-    if(this.isFallingStone() === false) {
+    if(this.isFalling()) {
       if (map[playery][playerx + dx + dx].isAir()
         && map[playery + 1][playerx + dx].isAir) {
         map[playery][playerx + dx + dx] = this;
         moveToTile(playerx + dx, playery);
       }
-    } else if (this.isFallingStone() === true) {
-
     }
   }
   isStony(): boolean { return true; }
@@ -349,8 +351,6 @@ class Stone implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return this.falling.isFalling();}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
@@ -362,6 +362,9 @@ class Box implements Tile {
   drop(): void {}
   rest(): void {}
   constructor(private falling: FallingState) {
+  }
+  isFalling(): boolean {
+    return this.falling.isFalling();
   }
   moveHorizontal(dx: number) {
     if(true) {
@@ -385,8 +388,6 @@ class Box implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return this.falling.isFalling();}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
@@ -394,6 +395,9 @@ class Box implements Tile {
 }
 
 class Player implements Tile {
+  isFalling(): boolean {
+    return false;
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) {}
@@ -409,8 +413,6 @@ class Player implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return true;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
@@ -418,6 +420,9 @@ class Player implements Tile {
 }
 
 class Key1 implements Tile {
+  isFalling(): boolean {
+    return false;
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) {
@@ -439,8 +444,6 @@ class Key1 implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return true;}
   isKey2(){return false;}
   isLock1(){return false;}
@@ -448,6 +451,9 @@ class Key1 implements Tile {
 }
 
 class Key2 implements Tile {
+  isFalling(): boolean {
+    return false;
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) {
@@ -469,8 +475,6 @@ class Key2 implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return true;}
   isLock1(){return false;}
@@ -478,6 +482,9 @@ class Key2 implements Tile {
 }
 
 class Lock1 implements Tile {
+  isFalling(): boolean {
+    return false;
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) {}
@@ -494,8 +501,6 @@ class Lock1 implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return true;}
@@ -503,6 +508,9 @@ class Lock1 implements Tile {
 }
 
 class Lock2 implements Tile {
+  isFalling(): boolean {
+    return false;
+  }
   drop(): void {}
   rest(): void {}
   moveHorizontal(dx: number) {} 
@@ -519,8 +527,6 @@ class Lock2 implements Tile {
   isUnbreakable(){return false;}
   isAir(){return false;}
   isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return false;}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
