@@ -102,8 +102,8 @@ function transformTile(tile: RawTile) {
     case RawTile.UNBREAKABLE: return new Unbreakable();
     case RawTile.STONE: return new Stone(new Falling());
     case RawTile.FALLING_STONE: return new Stone(new Resting());
-    case RawTile.BOX: return new Box();
-    case RawTile.FALLING_BOX: return new FallingBox();
+    case RawTile.BOX: return new Box(new Resting());
+    case RawTile.FALLING_BOX: return new Box(new Falling());
     case RawTile.FLUX: return new Flux();
     case RawTile.KEY1: return new Key1();
     case RawTile.LOCK1: return new Lock2();
@@ -186,14 +186,14 @@ function updateTile() {
           }
           else if (map[y][x].isBoxy()
               && map[y + 1][x].isAir()) {
-              map[y + 1][x] = new FallingBox();
+              map[y + 1][x] = new Box(new Falling());
               map[y][x] = new Air();
           }
           else if (map[y][x].isFallingStone()) {
               map[y][x] = new Stone(new Falling());
           }
           else if (map[y][x].isFallingBox()) {
-              map[y][x] = new Box();
+              map[y][x] = new Box(new Resting());
           }
       }
   }
@@ -361,6 +361,8 @@ class Stone implements Tile {
 class Box implements Tile {
   drop(): void {}
   rest(): void {}
+  constructor(private falling: FallingState) {
+  }
   moveHorizontal(dx: number) {
     if(true) {
       if (map[playery][playerx + dx + dx].isAir()
@@ -384,34 +386,7 @@ class Box implements Tile {
   isAir(){return false;}
   isPlayer(){return false;}
   isFallingStone(){return false;}
-  isFallingBox(){return false;}
-  isKey1(){return false;}
-  isKey2(){return false;}
-  isLock1(){return false;}
-  isLock2(){return false;}
-}
-
-class FallingBox implements Tile {
-  drop(): void {}
-  rest(): void {}
-  moveHorizontal(dx: number) {
-    if(true) {}
-  }
-  isStony(): boolean { return false; }
-  isBoxy(): boolean { return true; }
-  draw(g: CanvasRenderingContext2D, x: number, y: number): void {
-    g.fillStyle = "#8b4513";
-    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-  }
-  color(g: CanvasRenderingContext2D): void {
-    g.fillStyle = "#8b4513";
-  }
-  isFlux(){return false;}
-  isUnbreakable(){return false;}
-  isAir(){return false;}
-  isPlayer(){return false;}
-  isFallingStone(){return false;}
-  isFallingBox(){return true;}
+  isFallingBox(){return this.falling.isFalling();}
   isKey1(){return false;}
   isKey2(){return false;}
   isLock1(){return false;}
