@@ -179,9 +179,8 @@ function handleInputs() {
 function updateTile() {
   for (var y = map.length - 1; y >= 0; y--) {
       for (var x = 0; x < map[y].length; x++) {
-          if (map[y][x].isStony()
-              && map[y + 1][x].isAir() 
-              || map[y][x].isBoxy()
+          if ((map[y][x].isStony()
+              || map[y][x].isBoxy())
               && map[y + 1][x].isAir()) {
                 map[y][x].drop();
                 map[y + 1][x] = map[y][x];
